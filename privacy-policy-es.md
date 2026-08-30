@@ -1,6 +1,6 @@
 # Política de privacidad de Astervex
 
-Fecha de entrada en vigor: 18 de agosto de 2026
+Fecha de entrada en vigor: 23 de agosto de 2026
 
 Astervex es desarrollado y publicado por Dmitrii Kryzhanovskii. Beatroot Development es el nombre de proyecto y marca utilizado para Astervex. Esta política explica qué datos almacena Astervex y cómo se usan esos datos.
 
@@ -19,7 +19,7 @@ Astervex no solicita nombre real, dirección de correo electrónico, número de 
 
 ## Cómo se recopilan y almacenan los datos
 
-- El usuario introduce el Profile ID y la contraseña al crear una cuenta o iniciar sesión. Astervex no almacena la contraseña; solo almacena un verificador derivado de ella mediante hash y una sal aleatoria única.
+- Para una cuenta estándar, el usuario introduce el Profile ID y la contraseña al crearla o iniciar sesión. Si el usuario elige Jugar como invitado, Astervex crea o restaura una cuenta de invitado completa en la base de datos privada de CloudKit del usuario y genera una contraseña criptográficamente aleatoria durante la creación. Astervex no almacena la contraseña de ningún tipo de cuenta; solo conserva un verificador derivado mediante hash y una sal aleatoria única. La contraseña generada para el invitado no se muestra ni se guarda como texto sin cifrar.
 - Los datos de juego se crean a partir de las acciones y del progreso del usuario en el juego.
 - La app genera los identificadores de dispositivo y sesión. iOS proporciona el nombre del dispositivo, que se usa únicamente para mostrar la sesión activa al usuario y resolver conflictos de sesión.
 - Los datos de entrega de compras se reciben de Apple StoreKit cuando el usuario inicia o restaura una compra dentro de la app.
