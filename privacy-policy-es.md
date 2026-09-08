@@ -13,9 +13,10 @@ Astervex almacena los siguientes datos para proporcionar el juego:
 - Datos de cuenta: Astervex Profile ID, identificadores internos de cuenta, datos de verificación de contraseña con hash y sal aleatoria única, metadatos de sesión activa, nombre del dispositivo e identificadores de dispositivo y sesión usados para iniciar sesión y evitar conflictos de cuenta entre dispositivos.
 - Datos de juego: perfil del jugador, apodo del piloto, personaje seleccionado, puntuación máxima, partidas jugadas, saldos, contenido desbloqueado, inventario, configuración de la nave, progreso del mapa y estado guardado relacionado con el juego.
 - Datos de entrega de compras: identificadores de transacciones de StoreKit, identificadores de transacciones originales, identificadores de productos, cantidad de cristales, fecha de compra y fecha de entrega. Estos datos se usan para entregar compras dentro de la app y evitar entregas duplicadas.
-- Datos de eliminación de cuenta: después de eliminar una cuenta, Astervex conserva un marcador mínimo con el Profile ID, los identificadores internos de la cuenta y del perfil, el identificador de la operación de eliminación y la fecha de eliminación. No contiene progreso del juego, datos de verificación de contraseña ni datos de sesión activa. El marcador se reemplaza si el usuario crea explícitamente una cuenta nueva con el mismo Profile ID.
+- Datos de eliminación de cuenta: después de eliminar una cuenta, Astervex conserva un marcador mínimo específico de esa generación con el Profile ID, los identificadores internos de la cuenta y del perfil, el identificador de la operación de eliminación y la fecha de eliminación. No contiene progreso del juego, datos de verificación de contraseña ni datos de sesión activa. Crear una cuenta nueva con el mismo Profile ID elimina el marcador del nombre actual, pero no los marcadores de generaciones internas anteriores.
+- Datos de comentarios: el texto del mensaje y las fotos o vídeos seleccionados por el usuario, además de la dirección del remitente cuando el mensaje se envía mediante una app de correo. Si el usuario lo desea, el informe también puede incluir la versión de la app, el modelo del dispositivo, la versión de iOS, el idioma y la ubicación actual del juego. El informe de usuario no incluye identificadores de cuenta, apodo ni saldos.
 
-Astervex no solicita nombre real, dirección de correo electrónico, número de teléfono, ubicación precisa, contactos, fotos, cámara, micrófono, datos de salud ni datos de tarjetas de pago.
+Astervex no solicita nombre real, número de teléfono, ubicación precisa, contactos, cámara, micrófono, datos de salud ni datos de tarjetas de pago. La dirección de correo y las fotos o vídeos seleccionados solo se comparten cuando el usuario decide enviar comentarios.
 
 ## Cómo se recopilan y almacenan los datos
 
@@ -23,6 +24,7 @@ Astervex no solicita nombre real, dirección de correo electrónico, número de 
 - Los datos de juego se crean a partir de las acciones y del progreso del usuario en el juego.
 - La app genera los identificadores de dispositivo y sesión. iOS proporciona el nombre del dispositivo, que se usa únicamente para mostrar la sesión activa al usuario y resolver conflictos de sesión.
 - Los datos de entrega de compras se reciben de Apple StoreKit cuando el usuario inicia o restaura una compra dentro de la app.
+- Los datos de comentarios se proporcionan voluntariamente mediante la pantalla `Comentarios`. Astervex no solicita acceso a toda la fototeca: solo recibe las fotos o vídeos que el usuario selecciona explícitamente.
 
 Las cachés de cuenta y juego, la configuración, el estado de autenticación activa y el estado pendiente de recuperación de compras o eliminaciones se almacenan localmente en el almacenamiento privado de la app. El identificador de dispositivo generado por la app también se guarda en el llavero de iOS para mantener la coherencia de las sesiones entre ejecuciones y reinstalaciones. Los registros de cuenta, juego, entrega de compras y marcadores de eliminación se sincronizan con la base de datos privada de CloudKit del usuario cuando iCloud está disponible.
 
@@ -35,12 +37,13 @@ Astervex utiliza los datos almacenados únicamente para la funcionalidad de la a
 - mantener una sesión activa de cuenta coherente entre dispositivos;
 - guardar el progreso del juego, saldos, inventario y contenido desbloqueado;
 - entregar compras dentro de la app mediante StoreKit y evitar la entrega duplicada de cristales.
+- recibir informes de errores, sugerencias y otros mensajes del usuario.
 
 Astervex no utiliza estos datos para publicidad de terceros, publicidad del desarrollador, intercambio con data brokers ni seguimiento entre apps.
 
 ## Intercambio de datos y servicios de Apple
 
-Astervex no vende datos de usuarios ni los comparte con servicios de publicidad, análisis o data brokers. Los datos solo se procesan mediante servicios de Apple necesarios para la funcionalidad de la app: CloudKit para el almacenamiento privado en iCloud y StoreKit/App Store para las compras dentro de la app. Apple procesa estos datos conforme a sus políticas de privacidad, condiciones del servicio y protecciones de seguridad. Astervex no autoriza a Apple ni a ningún otro proveedor de servicios a utilizar los datos de la app Astervex para fines incompatibles con esta política.
+Astervex no vende datos de usuarios ni los comparte con servicios de publicidad, análisis o data brokers. Los datos de la app se procesan mediante servicios de Apple necesarios para su funcionamiento: CloudKit para el almacenamiento privado en iCloud y StoreKit/App Store para las compras dentro de la app. Los comentarios solo se envían tras una acción explícita del usuario mediante la app de correo configurada o una app elegida por el usuario en el menú del sistema para compartir; en ese caso se aplican las condiciones del servicio seleccionado. Apple procesa los datos conforme a sus políticas de privacidad, condiciones del servicio y protecciones de seguridad.
 
 ## iCloud y CloudKit
 
@@ -69,7 +72,8 @@ Eliminar una cuenta de Astervex no elimina el historial de compras de App Store,
 - Los registros de cuenta y juego se conservan mientras exista la cuenta de Astervex y se eliminan como se describe anteriormente cuando finaliza la eliminación de la cuenta.
 - Los registros de entrega de compras se conservan mientras sean necesarios para entregar compras y evitar entregas duplicadas; los registros conocidos vinculados a la cuenta se eliminan cuando finaliza la eliminación de la cuenta.
 - Las operaciones locales de recuperación se conservan únicamente mientras sean necesarias para completar o recuperar la entrega de una compra o la eliminación de una cuenta y se eliminan cuando se resuelve la operación.
-- El marcador de eliminación de cuenta se conserva en la base de datos privada de CloudKit del usuario hasta que este crea explícitamente una cuenta nueva con el mismo Profile ID; en ese momento, el marcador se reemplaza.
+- Los marcadores de eliminación específicos de cada generación se conservan en la base de datos privada de CloudKit del usuario para impedir que una compra tardía o un dispositivo desactualizado reactive un perfil interno anterior. Volver a crear el mismo Profile ID no elimina los marcadores de generaciones anteriores.
+- Los mensajes de comentarios y archivos adjuntos recibidos se conservan solo durante el tiempo necesario para responder, diagnosticar el problema y mantener la correspondencia relacionada, salvo que la ley exija un periodo mayor.
 - El identificador de dispositivo generado por la app no es específico de una cuenta y permanece en el llavero de iOS después de eliminar una cuenta individual de Astervex. Se usa únicamente para mantener la coherencia de las sesiones y no se utiliza para seguimiento. El usuario puede solicitar ayuda relacionada con este identificador mediante la dirección de contacto indicada anteriormente.
 
 Astervex no recopila datos opcionales de publicidad o seguimiento, por lo que no existe consentimiento de publicidad o seguimiento que revocar. El usuario puede detener la recopilación futura de datos de cuenta y juego eliminando la cuenta y dejando de usar la app. Las preguntas o solicitudes de ayuda con la eliminación pueden enviarse a la dirección de contacto indicada anteriormente.
